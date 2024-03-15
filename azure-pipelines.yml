@@ -6,6 +6,8 @@
 trigger:
 - main
 
+
+
 pool:
   vmImage: windows-latest
 
@@ -19,4 +21,20 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+    goals: 'deploy'
+    options: 'mvn clean install -DskipTests'
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    testRunTitle: 'test'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+- task: MavenAuthenticate@0
+  inputs:
+    artifactsFeeds: 'skrasheedshaik88974'
+    mavenServiceConnections: 'Mulesoft Enterprise'
